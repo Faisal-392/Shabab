@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>جدول استراحة الشباب — السنة الكاملة</title>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;700;900&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Tajawal', sans-serif;
+    background: #f5f0e8;
+    min-height: 100vh;
+    display: flex; align-items: flex-start; justify-content: center;
+    padding: 2rem 1rem;
+  }
+
+  .page {
+    width: 100%; max-width: 720px;
+    background: #fffef9;
+    box-shadow: 0 8px 60px rgba(0,0,0,0.18);
+    overflow: hidden;
+  }
+
+  /* ── HEADER ── */
+  .top-band {
+    background: #1a1a2e; padding: 2.2rem 2.5rem 1.8rem;
+    position: relative; overflow: hidden;
+  }
+  .top-band::before { content:''; position:absolute; top:-40px; left:-40px; width:200px; height:200px; border-radius:50%; background:rgba(212,175,55,.08); }
+  .top-band::after  { content:''; position:absolute; bottom:-60px; right:-30px; width:160px; height:160px; border-radius:50%; background:rgba(212,175,55,.06); }
+  .logo-line { display:flex; align-items:center; gap:.7rem; margin-bottom:.5rem; }
+  .logo-icon { font-size:1.8rem; line-height:1; }
+  .doc-label { font-size:.7rem; font-weight:700; letter-spacing:.2em; color:#d4af37; text-transform:uppercase; }
+  .main-title { font-size:clamp(1.8rem,5vw,2.8rem); font-weight:900; color:#fff; line-height:1.1; position:relative; z-index:1; }
+  .main-title span { color:#d4af37; }
+  .subtitle { color:#8890a4; font-size:.88rem; margin-top:.4rem; position:relative; z-index:1; }
+  .gold-bar { height:4px; background:linear-gradient(90deg,#d4af37,#f0d060,#d4af37); }
+
+  .lock-btn {
+    position: absolute; top: 1.5rem; left: 1.5rem;
+    background: rgba(212,175,55,.15); border: 1px solid rgba(212,175,55,.4);
+    color: #d4af37; font-size: .75rem; font-weight: 700;
+    padding: .4rem .8rem; border-radius: 2rem;
+    cursor: pointer; transition: all .2s;
+    font-family: inherit; z-index: 2;
+  }
+  .lock-btn:hover { background: rgba(212,175,55,.25); }
+  .lock-btn.unlocked { background:#d4af37; color:#1a1a2e; }
+
+  /* ── SECTIONS ── */
+  .section-wrap { padding:1.5rem 2.5rem; border-bottom:1px solid #ede8d8; }
+  .section-label { font-size:.68rem; font-weight:700; letter-spacing:.18em; color:#b0a070; text-transform:uppercase; margin-bottom:.9rem; }
+
+  .members-row { display:flex; gap:.7rem; flex-wrap:wrap; }
+  .member { display:flex; align-items:center; gap:.45rem; padding:.4rem .9rem; border-radius:2rem; font-weight:700; font-size:.88rem; }
+  .member.active-now { background:#1a1a2e; color:#d4af37; border:1.5px solid #d4af37; }
+  .member.waiting { background:#fff8e8; color:#8a6a20; border:1.5px solid #e8d090; }
+
+  /* ── RATINGS ── */
+  .ratings-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(130px,1fr)); gap:.8rem; }
+
+  .rating-card {
+    background:#fffef9; border:1.5px solid #ede8d8;
+    border-radius:.8rem; padding:1rem .8rem;
+    text-align:center; transition:transform .15s, border-color .2s, box-shadow .2s;
+    user-select:none;
+  }
+  .rating-card.score-1  { border-color:#f0b8a0; background:linear-gradient(135deg,#fff5f0,#fffef9); }
+  .rating-card.score-2  { border-color:#e8c890; background:linear-gradient(135deg,#fffaee,#fffef9); }
+  .rating-card.score-3  { border-color:#d0c870; background:linear-gradient(135deg,#fffff0,#fffef9); }
+  .rating-card.score-4  { border-color:#a8c870; background:linear-gradient(135deg,#f4fff0,#fffef9); }
+  .rating-card.score-5  { border-color:#60b860; background:linear-gradient(135deg,#eefff0,#fffef9); box-shadow:0 2px 14px rgba(80,180,80,.15); }
+  .rating-card.pending  { border-color:#e8e8e8; background:#fafafa; opacity:.62; }
+
+  .r-name { font-size:.95rem; font-weight:900; color:#1a1a2e; margin-bottom:.45rem; }
+  .star-row { display:flex; justify-content:center; gap:.08rem; margin-bottom:.3rem; }
+  .star-btn {
+    font-size:1.25rem; transition:transform .1s, color .15s;
+    background:none; border:none; padding:.1rem .05rem; line-height:1;
+    color:#d8d0b8; cursor: not-allowed;
+  }
+  .star-btn.editable { cursor: pointer; }
+  .star-btn.editable:hover { transform:scale(1.25); }
+  .star-btn.lit { color:#d4af37; }
+
+  .r-label { font-size:.72rem; font-weight:700; letter-spacing:.04em; margin-top:.3rem; min-height:1.1rem; }
+
+  /* ── SCHEDULE ── */
+  .schedule { padding:1.8rem 2.5rem; }
+  .schedule-title { font-size:.68rem; font-weight:700; letter-spacing:.18em; color:#b0a070; text-transform:uppercase; margin-bottom:1.2rem; }
+
+  .month-sep { display:flex; align-items:center; gap:.8rem; margin:1.4rem 0 .8rem; }
+  .month-sep .m-line { flex:1; height:1px; background:#e8e0cc; }
+  .month-sep .m-label {
+    font-size:.78rem; font-weight:900; color:#1a1a2e;
+    background:#d4af37; padding:.25rem .8rem;
+    border-radius:2rem; letter-spacing:.05em; white-space:nowrap;
+  }
+
+  .entry {
+    display:grid; grid-template-columns:38px 1fr auto;
+    align-items:center; gap:.8rem;
+    padding:.7rem .9rem; margin-bottom:.5rem;
+    border-radius:.55rem; border:1.5px solid #ede8d8;
+    background:#fffef9; transition:transform .15s;
+  }
+  .entry:hover { transform:translateX(-3px); }
+  .entry.highlight { border-color:#d4af37; background:linear-gradient(135deg,#fffbee,#fffef9); box-shadow:0 2px 12px rgba(212,175,55,.12); }
+  .entry.dinner-type { border-color:#e8c8a0; background:linear-gradient(135deg,#fff8f0,#fffef9); }
+  .entry.done-entry { opacity:.42; }
+
+  .num-badge { width:38px; height:38px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:900; font-size:.85rem; flex-shrink:0; }
+  .activity    .num-badge { background:#1a1a2e; color:#d4af37; }
+  .dinner-type .num-badge { background:#fff0d8; color:#b07830; border:1.5px solid #e8c890; }
+
+  .entry-body { flex:1; min-width:0; }
+  .entry-top { display:flex; align-items:center; gap:.4rem; margin-bottom:.1rem; flex-wrap: wrap; }
+  .type-pill { font-size:.6rem; font-weight:700; letter-spacing:.05em; padding:.1rem .45rem; border-radius:2rem; }
+  .activity    .type-pill { background:#1a1a2e; color:#d4af37; }
+  .dinner-type .type-pill { background:#fff0d8; color:#b07830; }
+  .e-name { font-size:.95rem; font-weight:900; color:#1a1a2e; }
+  .e-status { font-size:.85rem; margin-right: .2rem; }
+
+  .e-date {
+    text-align:left; flex-shrink:0;
+    background: rgba(255,255,255,.5);
+    border-radius: .5rem; padding: .3rem .55rem;
+    min-width: 62px;
+  }
+  .e-date .day-name { color:#a09070; font-size:.62rem; font-weight:700; line-height:1; }
+  .e-date .day-num { color:#1a1a2e; font-size:1.1rem; font-weight:900; line-height:1.1; margin: .15rem 0; }
+
+  /* ── ROLE MATRIX ── */
+  .matrix-wrap {
+    padding: 1.4rem 2.5rem 1.8rem;
+    background: linear-gradient(135deg, #fffbf0, #fffef9);
+    border-bottom: 1px solid #ede8d8;
+  }
+  .matrix-title {
+    font-size: .68rem; font-weight: 700; letter-spacing: .18em;
+    color: #b0a070; text-transform: uppercase; margin-bottom: .9rem;
+  }
+  .matrix-title small {
+    font-size: .68rem; font-weight: 400; color: #b0a888;
+    letter-spacing: 0; text-transform: none; margin-right: .5rem;
+  }
+  .matrix-table {
+    width: 100%; border-collapse: separate; border-spacing: 0;
+    background: #fffef9; border-radius: .7rem; overflow: hidden;
+    border: 1.5px solid #ede8d8; font-size: .85rem;
+  }
+  .matrix-table th, .matrix-table td {
+    padding: .55rem .4rem; text-align: center;
+    border-bottom: 1px solid #f0ebde;
+    border-left: 1px solid #f0ebde;
+  }
+  .matrix-table th:first-child, .matrix-table td:first-child { border-left: none; }
+  .matrix-table tr:last-child td { border-bottom: none; }
+  .matrix-table thead th {
+    background: #1a1a2e; color: #d4af37;
+    font-weight: 700; font-size: .75rem;
+  }
+  .matrix-table tbody th {
+    background: #fafaf5; color: #1a1a2e; font-weight: 900;
+    text-align: right; padding-right: .8rem;
+  }
+  .role-pill {
+    display: inline-block; padding: .2rem .55rem;
+    border-radius: 2rem; font-weight: 700; font-size: .72rem;
+    white-space: nowrap;
+  }
+  .role-pill.r-dinner   { background:#fff0d8; color:#b07830; border:1px solid #e8c890; }
+  .role-pill.r-activity { background:#1a1a2e; color:#d4af37; border:1px solid #d4af37; }
+  .matrix-legend {
+    margin-top: .9rem; display: flex; gap: 1rem; justify-content: center;
+    flex-wrap: wrap; font-size: .75rem; color: #8a8070;
+  }
+
+  /* ── FOOTER ── */
+  .footer { background:#fafaf5; border-top:1px solid #ede8d8; padding:.9rem 2.5rem; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:.5rem; }
+  .footer-note { font-size:.72rem; color:#c0b888; }
+
+  /* ── MODAL ── */
+  .modal-overlay {
+    position: fixed; top:0; left:0; right:0; bottom:0;
+    background: rgba(0,0,0,.6); backdrop-filter: blur(4px);
+    display: none; align-items: center; justify-content: center;
+    z-index: 100; padding: 1rem;
+  }
+  .modal-overlay.show { display: flex; }
+  .modal {
+    background: #fffef9; border-radius: 1rem;
+    padding: 2rem; max-width: 360px; width: 100%;
+    text-align: center; box-shadow: 0 20px 60px rgba(0,0,0,.3);
+    animation: pop .25s ease;
+  }
+  @keyframes pop { from{transform:scale(.9);opacity:0} to{transform:scale(1);opacity:1} }
+  .modal h3 { font-size:1.2rem; color:#1a1a2e; margin-bottom:.4rem; }
+  .modal p { font-size:.85rem; color:#8a8070; margin-bottom:1.2rem; }
+  .modal input {
+    width:100%; padding:.8rem 1rem; font-family: inherit;
+    font-size: 1rem; border-radius:.6rem; border:1.5px solid #ede8d8;
+    background: #fafaf5; text-align: center; letter-spacing: .2em;
+    direction: ltr;
+  }
+  .modal input:focus { outline:none; border-color:#d4af37; background:#fff; }
+  .modal-btns { display:flex; gap:.5rem; margin-top:1rem; }
+  .modal-btn {
+    flex:1; padding:.7rem; border-radius:.6rem; border:none;
+    font-family: inherit; font-weight:700; cursor:pointer; font-size:.9rem;
+  }
+  .modal-btn.primary { background:#1a1a2e; color:#d4af37; }
+  .modal-btn.secondary { background:#f0ede4; color:#8a8070; }
+  .modal-error { color: #c0301a; font-size: .8rem; margin-top: .6rem; min-height: 1rem; }
+
+  @media print { body{background:white;padding:0} .page{box-shadow:none} .lock-btn{display:none} }
+
+  @media (max-width: 480px) {
+    .section-wrap, .schedule, .matrix-wrap, .footer { padding-left:1.2rem; padding-right:1.2rem; }
+    .top-band { padding: 2rem 1.2rem 1.5rem; }
+    .matrix-table { font-size:.75rem; }
+    .matrix-table th, .matrix-table td { padding:.45rem .25rem; }
+    .role-pill { font-size:.65rem; padding:.15rem .4rem; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- HEADER -->
+  <div class="top-band">
+    <button class="lock-btn" id="lockBtn" onclick="toggleLock()">🔒 تعديل</button>
+    <div class="logo-line">
+      <span class="logo-icon">🏕️</span>
+      <span class="doc-label">جدول السنة — ٢٠٢٦/٢٠٢٧</span>
+    </div>
+    <div class="main-title">استراحة <span>الشباب</span></div>
+    <div class="subtitle">كل شهر ٤ أحداث · ٤٨ حدث في السنة كاملة</div>
+  </div>
+  <div class="gold-bar"></div>
+
+  <!-- MEMBERS -->
+  <div class="section-wrap">
+    <div class="section-label">الأعضاء — الترتيب الثابت</div>
+    <div class="members-row" id="membersRow"></div>
+  </div>
+
+  <!-- RATINGS -->
+  <div class="section-wrap">
+    <div class="section-label">لوحة التقييمات</div>
+    <div class="ratings-grid" id="ratingsGrid"></div>
+  </div>
+
+  <!-- ROLE MATRIX -->
+  <div class="matrix-wrap">
+    <div class="matrix-title">
+      توزيع كل شهر
+      <small>— يتكرر نفس الترتيب كل شهر</small>
+    </div>
+    <table class="matrix-table" id="roleMatrix"></table>
+    <div class="matrix-legend">
+      <span class="role-pill r-dinner">🍽️ عشاء سبت</span>
+      <span class="role-pill r-activity">🏕️ فعالية خميس</span>
+    </div>
+  </div>
+
+  <!-- SCHEDULE -->
+  <div class="schedule">
+    <div class="schedule-title">الجدول الكامل — ١٢ شهر · ٤٨ حدث</div>
+    <div id="scheduleList"></div>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <span class="footer-note">🏕️ استراحة الشباب</span>
+    <span class="footer-note">يونيو ٢٠٢٦ — مايو ٢٠٢٧</span>
+  </div>
+
+</div>
+
+<!-- Password Modal -->
+<div class="modal-overlay" id="passwordModal">
+  <div class="modal">
+    <h3>🔐 وضع التعديل</h3>
+    <p>أدخل كلمة السر لتفعيل التقييم</p>
+    <input type="password" id="passwordInput" placeholder="••••••" autocomplete="off">
+    <div class="modal-error" id="passwordError"></div>
+    <div class="modal-btns">
+      <button class="modal-btn secondary" onclick="closeModal()">إلغاء</button>
+      <button class="modal-btn primary" onclick="checkPassword()">تأكيد</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════
+// ⚙️  الإعدادات — عدّل هنا فقط
+// ═══════════════════════════════════════════════════
+
+// 🔐 كلمة السر للتعديل (غيّرها قبل الرفع!)
+const EDIT_PASSWORD = '1234';
+
+// الترتيب الثابت في كل شهر:
+// صامول (عشاء سبت) → فيصل (فعالية خميس) → هلال (عشاء سبت) → سبوعي (فعالية خميس)
+const MEMBERS_ORDER = [
+  { name: 'صامول',  type: 'dinner'   },
+  { name: 'فيصل',   type: 'activity' },
+  { name: 'هلال',   type: 'dinner'   },
+  { name: 'سبوعي',  type: 'activity' },
+];
+
+// كم حدث خلص من بداية يونيو ٢٠٢٦
+// مثلاً: صامول وفيصل في يونيو = 2
+let completedCount = 2;
+
+// التقييمات (1-5 أو 0 = لم يُقيَّم)
+const ratings = {
+  'صامول': 1,
+  'فيصل':  1,
+  'هلال':  0,
+  'سبوعي': 0,
+};
+
+// كل أحداث السنة - ٤٨ حدث محسوبين تواريخهم بالضبط
+const SCHEDULE = [
+  { name:'صامول', type:'dinner', day:'٦', dayName:'السبت', month:'يونيو', year:'٢٠٢٦' },
+  { name:'فيصل', type:'activity', day:'١١', dayName:'الخميس', month:'يونيو', year:'٢٠٢٦' },
+  { name:'هلال', type:'dinner', day:'١٣', dayName:'السبت', month:'يونيو', year:'٢٠٢٦' },
+  { name:'سبوعي', type:'activity', day:'١٨', dayName:'الخميس', month:'يونيو', year:'٢٠٢٦' },
+
+  { name:'صامول', type:'dinner', day:'٤', dayName:'السبت', month:'يوليو', year:'٢٠٢٦' },
+  { name:'فيصل', type:'activity', day:'٩', dayName:'الخميس', month:'يوليو', year:'٢٠٢٦' },
+  { name:'هلال', type:'dinner', day:'١١', dayName:'السبت', month:'يوليو', year:'٢٠٢٦' },
+  { name:'سبوعي', type:'activity', day:'١٦', dayName:'الخميس', month:'يوليو', year:'٢٠٢٦' },
+
+  { name:'صامول', type:'dinner', day:'١', dayName:'السبت', month:'أغسطس', year:'٢٠٢٦' },
+  { name:'فيصل', type:'activity', day:'٦', dayName:'الخميس', month:'أغسطس', year:'٢٠٢٦' },
+  { name:'هلال', type:'dinner', day:'٨', dayName:'السبت', month:'أغسطس', year:'٢٠٢٦' },
+  { name:'سبوعي', type:'activity', day:'١٣', dayName:'الخميس', month:'أغسطس', year:'٢٠٢٦' },
+
+  { name:'صامول', type:'dinner', day:'٥', dayName:'السبت', month:'سبتمبر', year:'٢٠٢٦' },
+  { name:'فيصل', type:'activity', day:'١٠', dayName:'الخميس', month:'سبتمبر', year:'٢٠٢٦' },
+  { name:'هلال', type:'dinner', day:'١٢', dayName:'السبت', month:'سبتمبر', year:'٢٠٢٦' },
+  { name:'سبوعي', type:'activity', day:'١٧', dayName:'الخميس', month:'سبتمبر', year:'٢٠٢٦' },
+
+  { name:'صامول', type:'dinner', day:'٣', dayName:'السبت', month:'أكتوبر', year:'٢٠٢٦' },
+  { name:'فيصل', type:'activity', day:'٨', dayName:'الخميس', month:'أكتوبر', year:'٢٠٢٦' },
+  { name:'هلال', type:'dinner', day:'١٠', dayName:'السبت', month:'أكتوبر', year:'٢٠٢٦' },
+  { name:'سبوعي', type:'activity', day:'١٥', dayName:'الخميس', month:'أكتوبر', year:'٢٠٢٦' },
+
+  { name:'صامول', type:'dinner', day:'٧', dayName:'السبت', month:'نوفمبر', year:'٢٠٢٦' },
+  { name:'فيصل', type:'activity', day:'١٢', dayName:'الخميس', month:'نوفمبر', year:'٢٠٢٦' },
+  { name:'هلال', type:'dinner', day:'١٤', dayName:'السبت', month:'نوفمبر', year:'٢٠٢٦' },
+  { name:'سبوعي', type:'activity', day:'١٩', dayName:'الخميس', month:'نوفمبر', year:'٢٠٢٦' },
+
+  { name:'صامول', type:'dinner', day:'٥', dayName:'السبت', month:'ديسمبر', year:'٢٠٢٦' },
+  { name:'فيصل', type:'activity', day:'١٠', dayName:'الخميس', month:'ديسمبر', year:'٢٠٢٦' },
+  { name:'هلال', type:'dinner', day:'١٢', dayName:'السبت', month:'ديسمبر', year:'٢٠٢٦' },
+  { name:'سبوعي', type:'activity', day:'١٧', dayName:'الخميس', month:'ديسمبر', year:'٢٠٢٦' },
+
+  { name:'صامول', type:'dinner', day:'٢', dayName:'السبت', month:'يناير', year:'٢٠٢٧' },
+  { name:'فيصل', type:'activity', day:'٧', dayName:'الخميس', month:'يناير', year:'٢٠٢٧' },
+  { name:'هلال', type:'dinner', day:'٩', dayName:'السبت', month:'يناير', year:'٢٠٢٧' },
+  { name:'سبوعي', type:'activity', day:'١٤', dayName:'الخميس', month:'يناير', year:'٢٠٢٧' },
+
+  { name:'صامول', type:'dinner', day:'٦', dayName:'السبت', month:'فبراير', year:'٢٠٢٧' },
+  { name:'فيصل', type:'activity', day:'١١', dayName:'الخميس', month:'فبراير', year:'٢٠٢٧' },
+  { name:'هلال', type:'dinner', day:'١٣', dayName:'السبت', month:'فبراير', year:'٢٠٢٧' },
+  { name:'سبوعي', type:'activity', day:'١٨', dayName:'الخميس', month:'فبراير', year:'٢٠٢٧' },
+
+  { name:'صامول', type:'dinner', day:'٦', dayName:'السبت', month:'مارس', year:'٢٠٢٧' },
+  { name:'فيصل', type:'activity', day:'١١', dayName:'الخميس', month:'مارس', year:'٢٠٢٧' },
+  { name:'هلال', type:'dinner', day:'١٣', dayName:'السبت', month:'مارس', year:'٢٠٢٧' },
+  { name:'سبوعي', type:'activity', day:'١٨', dayName:'الخميس', month:'مارس', year:'٢٠٢٧' },
+
+  { name:'صامول', type:'dinner', day:'٣', dayName:'السبت', month:'أبريل', year:'٢٠٢٧' },
+  { name:'فيصل', type:'activity', day:'٨', dayName:'الخميس', month:'أبريل', year:'٢٠٢٧' },
+  { name:'هلال', type:'dinner', day:'١٠', dayName:'السبت', month:'أبريل', year:'٢٠٢٧' },
+  { name:'سبوعي', type:'activity', day:'١٥', dayName:'الخميس', month:'أبريل', year:'٢٠٢٧' },
+
+  { name:'صامول', type:'dinner', day:'١', dayName:'السبت', month:'مايو', year:'٢٠٢٧' },
+  { name:'فيصل', type:'activity', day:'٦', dayName:'الخميس', month:'مايو', year:'٢٠٢٧' },
+  { name:'هلال', type:'dinner', day:'٨', dayName:'السبت', month:'مايو', year:'٢٠٢٧' },
+  { name:'سبوعي', type:'activity', day:'١٣', dayName:'الخميس', month:'مايو', year:'٢٠٢٧' },
+];
+
+// ═══════════════════════════════════════════════════
+// منطق التطبيق
+// ═══════════════════════════════════════════════════
+
+let editMode = false;
+
+function toggleLock() {
+  if (editMode) {
+    editMode = false;
+    document.getElementById('lockBtn').textContent = '🔒 تعديل';
+    document.getElementById('lockBtn').classList.remove('unlocked');
+    init();
+  } else {
+    document.getElementById('passwordModal').classList.add('show');
+    document.getElementById('passwordInput').value = '';
+    document.getElementById('passwordError').textContent = '';
+    setTimeout(() => document.getElementById('passwordInput').focus(), 100);
+  }
+}
+
+function closeModal() {
+  document.getElementById('passwordModal').classList.remove('show');
+}
+
+function checkPassword() {
+  const input = document.getElementById('passwordInput').value;
+  if (input === EDIT_PASSWORD) {
+    editMode = true;
+    document.getElementById('lockBtn').textContent = '🔓 وضع التعديل';
+    document.getElementById('lockBtn').classList.add('unlocked');
+    closeModal();
+    init();
+  } else {
+    document.getElementById('passwordError').textContent = 'كلمة السر غير صحيحة';
+  }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('passwordInput').addEventListener('keypress', e => {
+    if (e.key === 'Enter') checkPassword();
+  });
+});
+
+function getLabel(score) {
+  if (score === 0) return 'قريباً ⏳';
+  const map = ['', 'سبَك 💀', 'مقبول 😐', 'جيد 👌', 'حليو 😍', 'فحل 🔥'];
+  return map[score];
+}
+function getCardClass(score) {
+  if (score === 0) return 'pending';
+  return 'score-' + score;
+}
+function getLabelColor(score) {
+  if (score === 0) return '#b0a888';
+  if (score === 1) return '#c0301a';
+  if (score === 2) return '#b07830';
+  if (score === 3) return '#a08820';
+  if (score === 4) return '#6a9820';
+  return '#208830';
+}
+
+function buildRatingCard(name) {
+  const card = document.createElement('div');
+  card.className = 'rating-card ' + getCardClass(ratings[name]);
+  card.id = 'card-' + name;
+
+  const rname = document.createElement('div');
+  rname.className = 'r-name';
+  rname.textContent = name;
+  card.appendChild(rname);
+
+  const starRow = document.createElement('div');
+  starRow.className = 'star-row';
+  for (let i = 1; i <= 5; i++) {
+    const btn = document.createElement('button');
+    btn.className = 'star-btn' + (ratings[name] >= i ? ' lit' : '') + (editMode ? ' editable' : '');
+    btn.textContent = '★';
+    if (editMode) {
+      btn.onclick = () => setRating(name, ratings[name] === i ? 0 : i);
+    }
+    starRow.appendChild(btn);
+  }
+  card.appendChild(starRow);
+
+  const lbl = document.createElement('div');
+  lbl.className = 'r-label';
+  lbl.style.color = getLabelColor(ratings[name]);
+  lbl.textContent = getLabel(ratings[name]);
+  card.appendChild(lbl);
+
+  return card;
+}
+
+function setRating(name, val) {
+  if (!editMode) return;
+  ratings[name] = val;
+  const grid = document.getElementById('ratingsGrid');
+  const old  = document.getElementById('card-' + name);
+  grid.replaceChild(buildRatingCard(name), old);
+}
+
+// ── الأعضاء (اللي دوره الجاي = أول حدث غير منتهي) ──
+function buildMembers() {
+  const row = document.getElementById('membersRow');
+  row.innerHTML = '';
+  // اللي دوره الجاي
+  const nextEvent = SCHEDULE[completedCount];
+  const nextName = nextEvent ? nextEvent.name : null;
+
+  MEMBERS_ORDER.forEach(item => {
+    const div = document.createElement('div');
+    const isNext = item.name === nextName;
+    div.className = 'member ' + (isNext ? 'active-now' : 'waiting');
+    if (isNext) {
+      div.textContent = item.name + (item.type === 'dinner' ? ' 🍽️🔥' : ' 🏕️🔥');
+    } else {
+      div.textContent = item.name + (item.type === 'dinner' ? ' 🍽️' : ' 🏕️');
+    }
+    row.appendChild(div);
+  });
+}
+
+// ── جدول السنة الكامل ──
+function buildSchedule() {
+  const list = document.getElementById('scheduleList');
+  list.innerHTML = '';
+
+  let lastMonth = '';
+  SCHEDULE.forEach((ev, idx) => {
+    // separator لكل شهر جديد
+    const monthKey = ev.month + ev.year;
+    if (monthKey !== lastMonth) {
+      const sep = document.createElement('div');
+      sep.className = 'month-sep';
+      sep.innerHTML = `<div class="m-line"></div><div class="m-label">${ev.month} ${ev.year}</div><div class="m-line"></div>`;
+      list.appendChild(sep);
+      lastMonth = monthKey;
+    }
+
+    const isDone = idx < completedCount;
+    const isNext = idx === completedCount;
+
+    const entry = document.createElement('div');
+    const typeClass = ev.type === 'dinner' ? 'dinner-type' : 'activity';
+    entry.className = `entry ${typeClass}${isDone?' done-entry':''}${isNext?' highlight':''}`;
+
+    const icon = ev.type === 'dinner' ? '🍽️ عشاء' : '🏕️ فعالية';
+    const statusEmoji = isDone ? '✓' : isNext ? '🔥' : '⏳';
+
+    entry.innerHTML = `
+      <div class="num-badge">${toArabicNum(idx + 1)}</div>
+      <div class="entry-body">
+        <div class="entry-top">
+          <span class="type-pill">${icon}</span>
+        </div>
+        <div class="e-name"><span class="e-status">${statusEmoji}</span>${ev.name}</div>
+      </div>
+      <div class="e-date">
+        <div class="day-name">${ev.dayName}</div>
+        <div class="day-num">${ev.day}</div>
+        <div class="day-name">${ev.month}</div>
+      </div>
+    `;
+    list.appendChild(entry);
+  });
+}
+
+// ── جدول الأدوار المصغر (شهر واحد نموذج) ──
+function buildMatrix() {
+  const tbl = document.getElementById('roleMatrix');
+  tbl.innerHTML = '';
+
+  const thead = document.createElement('thead');
+  const hr = document.createElement('tr');
+  ['الترتيب', 'الشخص', 'الدور', 'اليوم'].forEach(t => {
+    const th = document.createElement('th');
+    th.textContent = t;
+    hr.appendChild(th);
+  });
+  thead.appendChild(hr);
+  tbl.appendChild(thead);
+
+  const tbody = document.createElement('tbody');
+  MEMBERS_ORDER.forEach((item, i) => {
+    const tr = document.createElement('tr');
+
+    const numCell = document.createElement('th');
+    numCell.textContent = toArabicNum(i + 1);
+    numCell.style.minWidth = '40px';
+    tr.appendChild(numCell);
+
+    const nameCell = document.createElement('td');
+    nameCell.style.fontWeight = '900';
+    nameCell.style.color = '#1a1a2e';
+    nameCell.textContent = item.name;
+    tr.appendChild(nameCell);
+
+    const roleCell = document.createElement('td');
+    const pill = document.createElement('span');
+    pill.className = 'role-pill ' + (item.type === 'dinner' ? 'r-dinner' : 'r-activity');
+    pill.textContent = item.type === 'dinner' ? '🍽️ عشاء' : '🏕️ فعالية';
+    roleCell.appendChild(pill);
+    tr.appendChild(roleCell);
+
+    const dayCell = document.createElement('td');
+    dayCell.style.color = '#8a8070';
+    dayCell.style.fontSize = '.78rem';
+    dayCell.textContent = item.type === 'dinner' ? 'السبت' : 'الخميس';
+    tr.appendChild(dayCell);
+
+    tbody.appendChild(tr);
+  });
+  tbl.appendChild(tbody);
+}
+
+function toArabicNum(n) {
+  return n.toString().replace(/[0-9]/g, d => '٠١٢٣٤٥٦٧٨٩'[d]);
+}
+
+function init() {
+  buildMembers();
+  const grid = document.getElementById('ratingsGrid');
+  grid.innerHTML = '';
+  MEMBERS_ORDER.forEach(item => grid.appendChild(buildRatingCard(item.name)));
+  buildMatrix();
+  buildSchedule();
+}
+
+init();
+</script>
+</body>
+</html>
