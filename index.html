@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>جدول استراحة الشباب</title>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;700;900&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Tajawal', sans-serif;
+    background: #f5f0e8;
+    min-height: 100vh;
+    display: flex; align-items: flex-start; justify-content: center;
+    padding: 2rem 1rem;
+  }
+
+  .page {
+    width: 100%; max-width: 720px;
+    background: #fffef9;
+    box-shadow: 0 8px 60px rgba(0,0,0,0.18);
+    overflow: hidden;
+  }
+
+  /* ── HEADER ── */
+  .top-band {
+    background: #1a1a2e; padding: 2.2rem 2.5rem 1.8rem;
+    position: relative; overflow: hidden;
+  }
+  .top-band::before { content:''; position:absolute; top:-40px; left:-40px; width:200px; height:200px; border-radius:50%; background:rgba(212,175,55,.08); }
+  .top-band::after  { content:''; position:absolute; bottom:-60px; right:-30px; width:160px; height:160px; border-radius:50%; background:rgba(212,175,55,.06); }
+  .logo-line { display:flex; align-items:center; gap:.7rem; margin-bottom:.5rem; }
+  .logo-icon { font-size:1.8rem; line-height:1; }
+  .doc-label { font-size:.7rem; font-weight:700; letter-spacing:.2em; color:#d4af37; text-transform:uppercase; }
+  .main-title { font-size:clamp(1.8rem,5vw,2.8rem); font-weight:900; color:#fff; line-height:1.1; position:relative; z-index:1; }
+  .main-title span { color:#d4af37; }
+  .subtitle { color:#8890a4; font-size:.88rem; margin-top:.4rem; position:relative; z-index:1; }
+  .gold-bar { height:4px; background:linear-gradient(90deg,#d4af37,#f0d060,#d4af37); }
+
+  /* ── SECTIONS ── */
+  .section-wrap { padding:1.5rem 2.5rem; border-bottom:1px solid #ede8d8; }
+  .section-label { font-size:.68rem; font-weight:700; letter-spacing:.18em; color:#b0a070; text-transform:uppercase; margin-bottom:.9rem; }
+
+  /* ── MEMBERS ── */
+  .members-row { display:flex; gap:.7rem; flex-wrap:wrap; }
+  .member { display:flex; align-items:center; gap:.45rem; padding:.4rem .9rem; border-radius:2rem; font-weight:700; font-size:.88rem; }
+  .member.done { background:#f0ede4; color:#a09070; border:1.5px solid #ddd8c0; }
+  .member.done .check { font-size:.75rem; background:#c8c0a0; color:white; border-radius:50%; width:16px; height:16px; display:flex; align-items:center; justify-content:center; }
+  .member.active-now { background:#1a1a2e; color:#d4af37; border:1.5px solid #d4af37; }
+  .member.waiting { background:#fff8e8; color:#8a6a20; border:1.5px solid #e8d090; }
+
+  /* ── RATINGS ── */
+  .ratings-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(130px,1fr)); gap:.8rem; }
+
+  .rating-card {
+    background:#fffef9; border:1.5px solid #ede8d8;
+    border-radius:.8rem; padding:1rem .8rem;
+    text-align:center; transition:transform .15s, border-color .2s, box-shadow .2s;
+    cursor: pointer; user-select:none;
+  }
+  .rating-card:hover { transform:translateY(-2px); }
+
+  .rating-card.score-0  { border-color:#e8e0cc; }
+  .rating-card.score-tafla { border-color:#d4af37; background:linear-gradient(135deg,#fffbee,#fffef9); box-shadow:0 2px 14px rgba(212,175,55,.18); }
+  .rating-card.score-1  { border-color:#f0b8a0; background:linear-gradient(135deg,#fff5f0,#fffef9); }
+  .rating-card.score-2  { border-color:#e8c890; background:linear-gradient(135deg,#fffaee,#fffef9); }
+  .rating-card.score-3  { border-color:#d0c870; background:linear-gradient(135deg,#fffff0,#fffef9); }
+  .rating-card.score-4  { border-color:#a8c870; background:linear-gradient(135deg,#f4fff0,#fffef9); }
+  .rating-card.score-5  { border-color:#60b860; background:linear-gradient(135deg,#eefff0,#fffef9); box-shadow:0 2px 14px rgba(80,180,80,.15); }
+  .rating-card.pending  { border-color:#e8e8e8; background:#fafafa; opacity:.62; }
+
+  .r-name { font-size:.95rem; font-weight:900; color:#1a1a2e; margin-bottom:.45rem; }
+
+  /* النجوم التفاعلية */
+  .star-row { display:flex; justify-content:center; gap:.08rem; margin-bottom:.3rem; }
+  .star-btn {
+    font-size:1.25rem; cursor:pointer; transition:transform .1s, color .15s;
+    background:none; border:none; padding:.1rem .05rem; line-height:1;
+    color:#d8d0b8;
+  }
+  .star-btn:hover { transform:scale(1.25); }
+  .star-btn.lit { color:#d4af37; }
+
+  /* تفلة زر */
+  .tafla-btn {
+    margin-top:.1rem; font-size:.72rem; font-weight:700;
+    padding:.25rem .7rem; border-radius:2rem; cursor:pointer;
+    border:1.5px solid #e0d8c0; background:#f8f4e8; color:#a09060;
+    transition:all .2s;
+  }
+  .tafla-btn.active { background:#d4af37; border-color:#b89020; color:#fff; }
+  .tafla-btn:hover  { border-color:#d4af37; color:#b08820; }
+  .tafla-btn.active:hover { background:#b89020; }
+
+  .r-label { font-size:.72rem; font-weight:700; letter-spacing:.04em; margin-top:.3rem; min-height:1.1rem; }
+
+  /* ── SCHEDULE ── */
+  .schedule { padding:1.8rem 2.5rem; }
+  .schedule-title { font-size:.68rem; font-weight:700; letter-spacing:.18em; color:#b0a070; text-transform:uppercase; margin-bottom:1.2rem; }
+
+  .month-sep { display:flex; align-items:center; gap:.8rem; margin:1.1rem 0 .8rem; }
+  .month-sep .m-line { flex:1; height:1px; background:#e8e0cc; }
+  .month-sep .m-label { font-size:.72rem; font-weight:700; color:#c0b080; letter-spacing:.12em; text-transform:uppercase; white-space:nowrap; }
+
+  .entry {
+    display:grid; grid-template-columns:42px 1fr auto;
+    align-items:center; gap:1rem;
+    padding:.9rem 1rem; margin-bottom:.6rem;
+    border-radius:.6rem; border:1.5px solid #ede8d8;
+    background:#fffef9; transition:transform .15s;
+    animation:slideIn .4s ease both;
+  }
+  .entry:hover { transform:translateX(-3px); }
+  .entry.highlight { border-color:#d4af37; background:linear-gradient(135deg,#fffbee,#fffef9); box-shadow:0 2px 12px rgba(212,175,55,.12); }
+  .entry.dinner-type { border-color:#e8c8a0; background:linear-gradient(135deg,#fff8f0,#fffef9); }
+  .entry.done-entry { opacity:.42; }
+
+  .num-badge { width:42px; height:42px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:900; font-size:.95rem; flex-shrink:0; }
+  .activity    .num-badge { background:#1a1a2e; color:#d4af37; }
+  .dinner-type .num-badge { background:#fff0d8; color:#b07830; border:1.5px solid #e8c890; }
+
+  .entry-body { flex:1; }
+  .entry-top { display:flex; align-items:center; gap:.5rem; margin-bottom:.15rem; }
+  .type-pill { font-size:.63rem; font-weight:700; letter-spacing:.08em; text-transform:uppercase; padding:.12rem .5rem; border-radius:2rem; }
+  .activity    .type-pill { background:#1a1a2e; color:#d4af37; }
+  .dinner-type .type-pill { background:#fff0d8; color:#b07830; }
+  .e-name { font-size:1rem; font-weight:900; color:#1a1a2e; }
+  .e-desc { font-size:.8rem; color:#8a8070; margin-top:.1rem; }
+  .e-round { font-size:.68rem; font-weight:700; color:#c0b080; white-space:nowrap; text-align:left; }
+
+  /* ── CYCLE ── */
+  .cycle-box { margin:0 2.5rem 2rem; padding:1rem 1.2rem; background:#1a1a2e; border-radius:.7rem; display:flex; align-items:center; gap:1rem; }
+  .cycle-icon { font-size:1.4rem; flex-shrink:0; }
+  .cycle-text { font-size:.82rem; color:#8890a4; line-height:1.6; }
+  .cycle-text strong { color:#d4af37; }
+  .cycle-chain { display:flex; align-items:center; gap:.4rem; margin-top:.5rem; flex-wrap:wrap; }
+  .chain-name { font-size:.75rem; font-weight:700; padding:.2rem .65rem; border-radius:2rem; background:rgba(212,175,55,.12); color:#d4af37; border:1px solid rgba(212,175,55,.25); }
+  .chain-name.done-chain { background:rgba(255,255,255,.04); color:#555d70; border-color:#2a2f3e; text-decoration:line-through; }
+  .chain-arrow { color:#3a4055; font-size:.8rem; }
+
+  /* ── ROLE MATRIX (الجدول المصغر) ── */
+  .matrix-wrap {
+    padding: 1.4rem 2.5rem 1.8rem;
+    background: linear-gradient(135deg, #fffbf0, #fffef9);
+    border-bottom: 1px solid #ede8d8;
+  }
+  .matrix-title {
+    font-size: .68rem; font-weight: 700; letter-spacing: .18em;
+    color: #b0a070; text-transform: uppercase; margin-bottom: .9rem;
+    display: flex; align-items: center; gap: .5rem;
+  }
+  .matrix-title small {
+    font-size: .68rem; font-weight: 400; color: #b0a888;
+    letter-spacing: 0; text-transform: none;
+  }
+
+  .matrix-table {
+    width: 100%; border-collapse: separate; border-spacing: 0;
+    background: #fffef9; border-radius: .7rem; overflow: hidden;
+    border: 1.5px solid #ede8d8; font-size: .85rem;
+  }
+  .matrix-table th, .matrix-table td {
+    padding: .65rem .5rem; text-align: center;
+    border-bottom: 1px solid #f0ebde;
+    border-left: 1px solid #f0ebde;
+  }
+  .matrix-table th:first-child, .matrix-table td:first-child { border-left: none; }
+  .matrix-table tr:last-child td { border-bottom: none; }
+
+  .matrix-table thead th {
+    background: #1a1a2e; color: #d4af37;
+    font-weight: 700; font-size: .8rem;
+    letter-spacing: .03em;
+  }
+  .matrix-table tbody th {
+    background: #fafaf5; color: #1a1a2e; font-weight: 900;
+    text-align: right; padding-right: 1rem; min-width: 75px;
+  }
+
+  .role-pill {
+    display: inline-block; padding: .25rem .7rem;
+    border-radius: 2rem; font-weight: 700; font-size: .78rem;
+    white-space: nowrap;
+  }
+  .role-pill.r-dinner {
+    background: #fff0d8; color: #b07830;
+    border: 1px solid #e8c890;
+  }
+  .role-pill.r-activity {
+    background: #1a1a2e; color: #d4af37;
+    border: 1px solid #d4af37;
+  }
+
+  .matrix-legend {
+    margin-top: .9rem; display: flex; gap: 1rem; justify-content: center;
+    flex-wrap: wrap; font-size: .75rem; color: #8a8070;
+  }
+  .legend-item { display: flex; align-items: center; gap: .4rem; }
+
+  /* ── FOOTER ── */
+  .footer { background:#fafaf5; border-top:1px solid #ede8d8; padding:.9rem 2.5rem; display:flex; justify-content:space-between; align-items:center; }
+  .footer-note { font-size:.72rem; color:#c0b888; }
+
+  @keyframes slideIn { from{opacity:0;transform:translateX(14px)} to{opacity:1;transform:translateX(0)} }
+  .entry:nth-child(1){animation-delay:.05s} .entry:nth-child(2){animation-delay:.1s}
+  .entry:nth-child(3){animation-delay:.15s} .entry:nth-child(4){animation-delay:.2s}
+  .entry:nth-child(5){animation-delay:.25s} .entry:nth-child(6){animation-delay:.3s}
+  .entry:nth-child(7){animation-delay:.35s} .entry:nth-child(8){animation-delay:.4s}
+
+  @media print { body{background:white;padding:0} .page{box-shadow:none} }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- HEADER -->
+  <div class="top-band">
+    <div class="logo-line">
+      <span class="logo-icon">🏕️</span>
+      <span class="doc-label">جدول دوري — الشباب</span>
+    </div>
+    <div class="main-title">استراحة <span>الشباب</span></div>
+    <div class="subtitle">فعالية شهرية كل خميس + عشاء السبت اللي بعده</div>
+  </div>
+  <div class="gold-bar"></div>
+
+  <!-- MEMBERS — يتحدث تلقائياً -->
+  <div class="section-wrap">
+    <div class="section-label">الأعضاء</div>
+    <div class="members-row" id="membersRow"></div>
+  </div>
+
+  <!-- RATINGS -->
+  <div class="section-wrap">
+    <div class="section-label">لوحة التقييمات — اضغط على النجوم</div>
+    <div class="ratings-grid" id="ratingsGrid"></div>
+  </div>
+
+  <!-- SCHEDULE -->
+  <div class="schedule">
+    <div class="schedule-title">الجدول الدوري</div>
+    <div id="scheduleList"></div>
+  </div>
+
+  <!-- ROLE MATRIX - الجدول المصغر -->
+  <div class="matrix-wrap">
+    <div class="matrix-title">
+      توزيع الأدوار
+      <small>— كل دورة الأدوار تنقلب</small>
+    </div>
+    <table class="matrix-table" id="roleMatrix"></table>
+    <div class="matrix-legend">
+      <div class="legend-item"><span class="role-pill r-dinner">🍽️ عشاء سبت</span></div>
+      <div class="legend-item"><span class="role-pill r-activity">🏕️ فعالية خميس</span></div>
+    </div>
+  </div>
+
+  <!-- CYCLE -->
+  <div class="cycle-box">
+    <div class="cycle-icon">🔄</div>
+    <div class="cycle-text">
+      <strong>الترتيب الدائري الثابت</strong>
+      <div class="cycle-chain" id="cycleChain"></div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <span class="footer-note">🏕️ استراحة الشباب</span>
+    <span class="footer-note">كل شهر حدث — بدون تواريخ ثابتة</span>
+  </div>
+
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════
+// ⚙️  الإعدادات — عدّل هنا فقط
+// ═══════════════════════════════════════════════════
+
+// الترتيب الدائري: كل شخص وحدثه
+// type: 'dinner' | 'activity'
+const CYCLE = [
+  { name: 'صامول',  type: 'dinner'   },
+  { name: 'فيصل',   type: 'activity' },
+  { name: 'هلال',   type: 'dinner'   },
+  { name: 'سبوعي',  type: 'activity' },
+];
+
+// كم حدث خلص (من بداية الدورة)
+// صامول وفيصل خلصوا = 2
+let completedCount = 2;
+
+// التقييمات المحفوظة
+// 0 = لم يُقيَّم، 1 = سبَك، 2 = مقبول، 3 = جيد، 4 = حليو، 5 = فحل
+const savedRatings = {
+  'صامول': 1,    // سبَك (الأسوأ — كان تفلة قبل)
+  'فيصل':  1,    // سبَك
+  'هلال':  0,
+  'سبوعي': 0,
+};
+
+// ═══════════════════════════════════════════════════
+// منطق الجدول
+// ═══════════════════════════════════════════════════
+
+const ratings = { ...savedRatings };
+
+function getLabel(score) {
+  if (score === 0) return 'قريباً ⏳';
+  const map = ['', 'سبَك 💀', 'مقبول 😐', 'جيد 👌', 'حليو 😍', 'فحل 🔥'];
+  return map[score];
+}
+
+function getCardClass(score) {
+  if (score === 0) return 'pending';
+  return 'score-' + score;
+}
+
+function getLabelColor(score) {
+  if (score === 0) return '#b0a888';
+  if (score === 1) return '#c0301a';
+  if (score === 2) return '#b07830';
+  if (score === 3) return '#a08820';
+  if (score === 4) return '#6a9820';
+  return '#208830';
+}
+
+// ── بناء بطاقة تقييم ──
+function buildRatingCard(name) {
+  const card = document.createElement('div');
+  card.className = 'rating-card ' + getCardClass(ratings[name]);
+  card.id = 'card-' + name;
+
+  const rname = document.createElement('div');
+  rname.className = 'r-name';
+  rname.textContent = name;
+  card.appendChild(rname);
+
+  // صف النجوم
+  const starRow = document.createElement('div');
+  starRow.className = 'star-row';
+  for (let i = 1; i <= 5; i++) {
+    const btn = document.createElement('button');
+    btn.className = 'star-btn' + (ratings[name] >= i ? ' lit' : '');
+    btn.textContent = '★';
+    btn.title = i + ' نجوم';
+    btn.onclick = () => setRating(name, ratings[name] === i ? 0 : i);
+    starRow.appendChild(btn);
+  }
+  card.appendChild(starRow);
+
+  const lbl = document.createElement('div');
+  lbl.className = 'r-label';
+  lbl.style.color = getLabelColor(ratings[name]);
+  lbl.textContent = getLabel(ratings[name]);
+  card.appendChild(lbl);
+
+  return card;
+}
+
+function setRating(name, val) {
+  ratings[name] = val;
+  // حفظ في المتصفح
+  try {
+    localStorage.setItem('shabab_ratings', JSON.stringify(ratings));
+  } catch(e) {}
+  const grid = document.getElementById('ratingsGrid');
+  const old  = document.getElementById('card-' + name);
+  grid.replaceChild(buildRatingCard(name), old);
+}
+
+// تحميل التقييمات المحفوظة من المتصفح
+try {
+  const stored = localStorage.getItem('shabab_ratings');
+  if (stored) {
+    const parsed = JSON.parse(stored);
+    Object.keys(parsed).forEach(k => {
+      if (k in ratings) ratings[k] = parsed[k];
+    });
+  }
+} catch(e) {}
+
+// ── دالة: نوع المهمة في دورة معينة (يتبدل كل دورة) ──
+// دورة 0 (د١): النوع الأصلي من CYCLE
+// دورة 1 (د٢): النوع المعاكس
+function getItemType(baseType, round) {
+  if (round % 2 === 0) return baseType;
+  return baseType === 'dinner' ? 'activity' : 'dinner';
+}
+
+// ── بناء قسم الأعضاء ──
+function buildMembers() {
+  const row = document.getElementById('membersRow');
+  row.innerHTML = '';
+  CYCLE.forEach((item, i) => {
+    const div = document.createElement('div');
+    const isDone = i < completedCount;
+    const isNext = i === completedCount;
+    div.className = 'member ' + (isDone ? 'done' : isNext ? 'active-now' : 'waiting');
+    if (isDone) {
+      div.innerHTML = `<span class="check">✓</span> ${item.name} <span style="font-size:.72rem;opacity:.7">— خلص</span>`;
+    } else if (isNext) {
+      div.textContent = item.name + (item.type === 'dinner' ? ' 🍽️🔥' : ' 🏕️🔥');
+    } else {
+      div.textContent = item.name + ' ⏳';
+    }
+    row.appendChild(div);
+  });
+}
+
+// ── بناء الجدول ──
+function buildSchedule() {
+  const list = document.getElementById('scheduleList');
+  list.innerHTML = '';
+  const n = CYCLE.length;
+
+  // نعرض الدورة الحالية + الدورة الجاية
+  const rounds = 2;
+  let num = 1;
+
+  for (let round = 0; round < rounds; round++) {
+    const roundLabel = round === 0 ? 'الدورة الأولى' : 'الدورة الثانية';
+    let shownSep = false;
+
+    for (let i = 0; i < n; i++) {
+      const globalIdx = round * n + i;
+      const item = CYCLE[i];
+      const currentType = getItemType(item.type, round);
+      const isDone = globalIdx < completedCount;
+      const isNext = globalIdx === completedCount;
+
+      // separator للدورة
+      if (!shownSep) {
+        const sep = document.createElement('div');
+        sep.className = 'month-sep';
+        let sepLabel = roundLabel;
+        if (round === 0 && completedCount === n) sepLabel += ' — خلصت';
+        sep.innerHTML = `<div class="m-line"></div><div class="m-label">${sepLabel}</div><div class="m-line"></div>`;
+        list.appendChild(sep);
+        shownSep = true;
+      }
+
+      // separator الشهر الحالي والجاي
+      if (isNext) {
+        const sep2 = document.createElement('div');
+        sep2.className = 'month-sep';
+        sep2.innerHTML = `<div class="m-line"></div><div class="m-label">هذا الشهر 🔥</div><div class="m-line"></div>`;
+        list.insertBefore(sep2, list.lastChild ? null : null);
+        list.appendChild(sep2);
+      } else if (globalIdx === completedCount + 1) {
+        const sep3 = document.createElement('div');
+        sep3.className = 'month-sep';
+        sep3.innerHTML = `<div class="m-line"></div><div class="m-label">الشهر الجاي</div><div class="m-line"></div>`;
+        list.appendChild(sep3);
+      }
+
+      const entry = document.createElement('div');
+      const typeClass = currentType === 'dinner' ? 'dinner-type' : 'activity';
+      entry.className = `entry ${typeClass}${isDone?' done-entry':''}${isNext?' highlight':''}`;
+
+      const icon = currentType === 'dinner' ? '🍽️ عشاء' : '🏕️ فعالية';
+      const roundTag = `د${round+1}`;
+      const statusTag = isDone ? '✓' : isNext ? '🔥' : '⏳';
+
+      entry.innerHTML = `
+        <div class="num-badge">${toArabicNum(num)}</div>
+        <div class="entry-body">
+          <div class="entry-top"><span class="type-pill">${icon}</span></div>
+          <div class="e-name">${item.name}</div>
+          <div class="e-desc">${currentType==='dinner'?'يتكفل بالعشاء للشباب':'يرتب الفعالية والبرنامج'}</div>
+        </div>
+        <div class="e-round">${roundTag} · ${statusTag}</div>
+      `;
+      list.appendChild(entry);
+      num++;
+    }
+  }
+}
+
+// ── بناء الجدول المصغر للأدوار ──
+function buildMatrix() {
+  const tbl = document.getElementById('roleMatrix');
+  tbl.innerHTML = '';
+  const numRounds = 3;  // نعرض ٣ دورات
+
+  // header
+  const thead = document.createElement('thead');
+  const hr = document.createElement('tr');
+  hr.appendChild(document.createElement('th')); // زاوية فارغة
+  for (let r = 0; r < numRounds; r++) {
+    const th = document.createElement('th');
+    th.textContent = `الدورة ${toArabicNum(r+1)}`;
+    hr.appendChild(th);
+  }
+  thead.appendChild(hr);
+  tbl.appendChild(thead);
+
+  // body
+  const tbody = document.createElement('tbody');
+  CYCLE.forEach(item => {
+    const tr = document.createElement('tr');
+    const nameCell = document.createElement('th');
+    nameCell.textContent = item.name;
+    tr.appendChild(nameCell);
+
+    for (let r = 0; r < numRounds; r++) {
+      const td = document.createElement('td');
+      const t = getItemType(item.type, r);
+      const pill = document.createElement('span');
+      pill.className = 'role-pill ' + (t === 'dinner' ? 'r-dinner' : 'r-activity');
+      pill.textContent = t === 'dinner' ? '🍽️ عشاء' : '🏕️ فعالية';
+      td.appendChild(pill);
+      tr.appendChild(td);
+    }
+    tbody.appendChild(tr);
+  });
+  tbl.appendChild(tbody);
+}
+
+// ── بناء سلسلة الدورة ──
+function buildChain() {
+  const chain = document.getElementById('cycleChain');
+  chain.innerHTML = '';
+  // الدورة اللي إحنا فيها حالياً
+  const currentRound = Math.floor(completedCount / CYCLE.length);
+  CYCLE.forEach((item, i) => {
+    const span = document.createElement('span');
+    span.className = 'chain-name' + (i < completedCount ? ' done-chain' : '');
+    const t = getItemType(item.type, currentRound);
+    span.textContent = item.name + ' ' + (t === 'dinner' ? 'عشاء' : 'فعالية');
+    chain.appendChild(span);
+    const arrow = document.createElement('span');
+    arrow.className = 'chain-arrow';
+    arrow.textContent = '←';
+    chain.appendChild(arrow);
+  });
+  const loop = document.createElement('span');
+  loop.className = 'chain-name';
+  loop.style.opacity = '.4';
+  loop.textContent = CYCLE[0].name + ' …';
+  chain.appendChild(loop);
+}
+
+function toArabicNum(n) {
+  return n.toString().replace(/[0-9]/g, d => '٠١٢٣٤٥٦٧٨٩'[d]);
+}
+
+// ── Init ──
+function init() {
+  buildMembers();
+  const grid = document.getElementById('ratingsGrid');
+  grid.innerHTML = '';
+  CYCLE.forEach(item => grid.appendChild(buildRatingCard(item.name)));
+  buildSchedule();
+  buildMatrix();
+  buildChain();
+}
+
+init();
+</script>
+</body>
+</html>
