@@ -91,12 +91,32 @@
   .schedule { padding:1.8rem 2.5rem; }
   .schedule-title { font-size:.68rem; font-weight:700; letter-spacing:.18em; color:#b0a070; text-transform:uppercase; margin-bottom:1.2rem; }
 
-  .month-sep { display:flex; align-items:center; gap:.8rem; margin:1.4rem 0 .8rem; }
+  .month-sep { display:flex; align-items:center; gap:.8rem; margin:1.4rem 0 .4rem; }
   .month-sep .m-line { flex:1; height:1px; background:#e8e0cc; }
   .month-sep .m-label {
     font-size:.78rem; font-weight:900; color:#1a1a2e;
     background:#d4af37; padding:.25rem .8rem;
     border-radius:2rem; letter-spacing:.05em; white-space:nowrap;
+  }
+
+  .flip-row {
+    text-align: center; margin-bottom: .9rem;
+  }
+  .flip-badge {
+    display: inline-block;
+    font-size: .68rem; font-weight: 700;
+    padding: .2rem .7rem; border-radius: 2rem;
+    letter-spacing: .03em;
+  }
+  .flip-badge.normal {
+    background: rgba(212,175,55,.12);
+    color: #b08820;
+    border: 1px solid rgba(212,175,55,.3);
+  }
+  .flip-badge.flipped {
+    background: rgba(80,140,180,.12);
+    color: #2868a0;
+    border: 1px solid rgba(80,140,180,.3);
   }
 
   .entry {
@@ -256,8 +276,8 @@
   <!-- ROLE MATRIX -->
   <div class="matrix-wrap">
     <div class="matrix-title">
-      توزيع كل شهر
-      <small>— يتكرر نفس الترتيب كل شهر</small>
+      توزيع الأدوار
+      <small>— كل شهر الأدوار تنقلب 🔄</small>
     </div>
     <table class="matrix-table" id="roleMatrix"></table>
     <div class="matrix-legend">
@@ -330,60 +350,60 @@ const SCHEDULE = [
   { name:'هلال', type:'dinner', day:'١٣', dayName:'السبت', month:'يونيو', year:'٢٠٢٦' },
   { name:'سبوعي', type:'activity', day:'١٨', dayName:'الخميس', month:'يونيو', year:'٢٠٢٦' },
 
-  { name:'صامول', type:'dinner', day:'٤', dayName:'السبت', month:'يوليو', year:'٢٠٢٦' },
-  { name:'فيصل', type:'activity', day:'٩', dayName:'الخميس', month:'يوليو', year:'٢٠٢٦' },
-  { name:'هلال', type:'dinner', day:'١١', dayName:'السبت', month:'يوليو', year:'٢٠٢٦' },
-  { name:'سبوعي', type:'activity', day:'١٦', dayName:'الخميس', month:'يوليو', year:'٢٠٢٦' },
+  { name:'صامول', type:'activity', day:'٢', dayName:'الخميس', month:'يوليو', year:'٢٠٢٦' },
+  { name:'فيصل', type:'dinner', day:'٤', dayName:'السبت', month:'يوليو', year:'٢٠٢٦' },
+  { name:'هلال', type:'activity', day:'٩', dayName:'الخميس', month:'يوليو', year:'٢٠٢٦' },
+  { name:'سبوعي', type:'dinner', day:'١١', dayName:'السبت', month:'يوليو', year:'٢٠٢٦' },
 
   { name:'صامول', type:'dinner', day:'١', dayName:'السبت', month:'أغسطس', year:'٢٠٢٦' },
   { name:'فيصل', type:'activity', day:'٦', dayName:'الخميس', month:'أغسطس', year:'٢٠٢٦' },
   { name:'هلال', type:'dinner', day:'٨', dayName:'السبت', month:'أغسطس', year:'٢٠٢٦' },
   { name:'سبوعي', type:'activity', day:'١٣', dayName:'الخميس', month:'أغسطس', year:'٢٠٢٦' },
 
-  { name:'صامول', type:'dinner', day:'٥', dayName:'السبت', month:'سبتمبر', year:'٢٠٢٦' },
-  { name:'فيصل', type:'activity', day:'١٠', dayName:'الخميس', month:'سبتمبر', year:'٢٠٢٦' },
-  { name:'هلال', type:'dinner', day:'١٢', dayName:'السبت', month:'سبتمبر', year:'٢٠٢٦' },
-  { name:'سبوعي', type:'activity', day:'١٧', dayName:'الخميس', month:'سبتمبر', year:'٢٠٢٦' },
+  { name:'صامول', type:'activity', day:'٣', dayName:'الخميس', month:'سبتمبر', year:'٢٠٢٦' },
+  { name:'فيصل', type:'dinner', day:'٥', dayName:'السبت', month:'سبتمبر', year:'٢٠٢٦' },
+  { name:'هلال', type:'activity', day:'١٠', dayName:'الخميس', month:'سبتمبر', year:'٢٠٢٦' },
+  { name:'سبوعي', type:'dinner', day:'١٢', dayName:'السبت', month:'سبتمبر', year:'٢٠٢٦' },
 
   { name:'صامول', type:'dinner', day:'٣', dayName:'السبت', month:'أكتوبر', year:'٢٠٢٦' },
   { name:'فيصل', type:'activity', day:'٨', dayName:'الخميس', month:'أكتوبر', year:'٢٠٢٦' },
   { name:'هلال', type:'dinner', day:'١٠', dayName:'السبت', month:'أكتوبر', year:'٢٠٢٦' },
   { name:'سبوعي', type:'activity', day:'١٥', dayName:'الخميس', month:'أكتوبر', year:'٢٠٢٦' },
 
-  { name:'صامول', type:'dinner', day:'٧', dayName:'السبت', month:'نوفمبر', year:'٢٠٢٦' },
-  { name:'فيصل', type:'activity', day:'١٢', dayName:'الخميس', month:'نوفمبر', year:'٢٠٢٦' },
-  { name:'هلال', type:'dinner', day:'١٤', dayName:'السبت', month:'نوفمبر', year:'٢٠٢٦' },
-  { name:'سبوعي', type:'activity', day:'١٩', dayName:'الخميس', month:'نوفمبر', year:'٢٠٢٦' },
+  { name:'صامول', type:'activity', day:'٥', dayName:'الخميس', month:'نوفمبر', year:'٢٠٢٦' },
+  { name:'فيصل', type:'dinner', day:'٧', dayName:'السبت', month:'نوفمبر', year:'٢٠٢٦' },
+  { name:'هلال', type:'activity', day:'١٢', dayName:'الخميس', month:'نوفمبر', year:'٢٠٢٦' },
+  { name:'سبوعي', type:'dinner', day:'١٤', dayName:'السبت', month:'نوفمبر', year:'٢٠٢٦' },
 
   { name:'صامول', type:'dinner', day:'٥', dayName:'السبت', month:'ديسمبر', year:'٢٠٢٦' },
   { name:'فيصل', type:'activity', day:'١٠', dayName:'الخميس', month:'ديسمبر', year:'٢٠٢٦' },
   { name:'هلال', type:'dinner', day:'١٢', dayName:'السبت', month:'ديسمبر', year:'٢٠٢٦' },
   { name:'سبوعي', type:'activity', day:'١٧', dayName:'الخميس', month:'ديسمبر', year:'٢٠٢٦' },
 
-  { name:'صامول', type:'dinner', day:'٢', dayName:'السبت', month:'يناير', year:'٢٠٢٧' },
-  { name:'فيصل', type:'activity', day:'٧', dayName:'الخميس', month:'يناير', year:'٢٠٢٧' },
-  { name:'هلال', type:'dinner', day:'٩', dayName:'السبت', month:'يناير', year:'٢٠٢٧' },
-  { name:'سبوعي', type:'activity', day:'١٤', dayName:'الخميس', month:'يناير', year:'٢٠٢٧' },
+  { name:'صامول', type:'activity', day:'٧', dayName:'الخميس', month:'يناير', year:'٢٠٢٧' },
+  { name:'فيصل', type:'dinner', day:'٩', dayName:'السبت', month:'يناير', year:'٢٠٢٧' },
+  { name:'هلال', type:'activity', day:'١٤', dayName:'الخميس', month:'يناير', year:'٢٠٢٧' },
+  { name:'سبوعي', type:'dinner', day:'١٦', dayName:'السبت', month:'يناير', year:'٢٠٢٧' },
 
   { name:'صامول', type:'dinner', day:'٦', dayName:'السبت', month:'فبراير', year:'٢٠٢٧' },
   { name:'فيصل', type:'activity', day:'١١', dayName:'الخميس', month:'فبراير', year:'٢٠٢٧' },
   { name:'هلال', type:'dinner', day:'١٣', dayName:'السبت', month:'فبراير', year:'٢٠٢٧' },
   { name:'سبوعي', type:'activity', day:'١٨', dayName:'الخميس', month:'فبراير', year:'٢٠٢٧' },
 
-  { name:'صامول', type:'dinner', day:'٦', dayName:'السبت', month:'مارس', year:'٢٠٢٧' },
-  { name:'فيصل', type:'activity', day:'١١', dayName:'الخميس', month:'مارس', year:'٢٠٢٧' },
-  { name:'هلال', type:'dinner', day:'١٣', dayName:'السبت', month:'مارس', year:'٢٠٢٧' },
-  { name:'سبوعي', type:'activity', day:'١٨', dayName:'الخميس', month:'مارس', year:'٢٠٢٧' },
+  { name:'صامول', type:'activity', day:'٤', dayName:'الخميس', month:'مارس', year:'٢٠٢٧' },
+  { name:'فيصل', type:'dinner', day:'٦', dayName:'السبت', month:'مارس', year:'٢٠٢٧' },
+  { name:'هلال', type:'activity', day:'١١', dayName:'الخميس', month:'مارس', year:'٢٠٢٧' },
+  { name:'سبوعي', type:'dinner', day:'١٣', dayName:'السبت', month:'مارس', year:'٢٠٢٧' },
 
   { name:'صامول', type:'dinner', day:'٣', dayName:'السبت', month:'أبريل', year:'٢٠٢٧' },
   { name:'فيصل', type:'activity', day:'٨', dayName:'الخميس', month:'أبريل', year:'٢٠٢٧' },
   { name:'هلال', type:'dinner', day:'١٠', dayName:'السبت', month:'أبريل', year:'٢٠٢٧' },
   { name:'سبوعي', type:'activity', day:'١٥', dayName:'الخميس', month:'أبريل', year:'٢٠٢٧' },
 
-  { name:'صامول', type:'dinner', day:'١', dayName:'السبت', month:'مايو', year:'٢٠٢٧' },
-  { name:'فيصل', type:'activity', day:'٦', dayName:'الخميس', month:'مايو', year:'٢٠٢٧' },
-  { name:'هلال', type:'dinner', day:'٨', dayName:'السبت', month:'مايو', year:'٢٠٢٧' },
-  { name:'سبوعي', type:'activity', day:'١٣', dayName:'الخميس', month:'مايو', year:'٢٠٢٧' },
+  { name:'صامول', type:'activity', day:'٦', dayName:'الخميس', month:'مايو', year:'٢٠٢٧' },
+  { name:'فيصل', type:'dinner', day:'٨', dayName:'السبت', month:'مايو', year:'٢٠٢٧' },
+  { name:'هلال', type:'activity', day:'١٣', dayName:'الخميس', month:'مايو', year:'٢٠٢٧' },
+  { name:'سبوعي', type:'dinner', day:'١٥', dayName:'السبت', month:'مايو', year:'٢٠٢٧' },
 ];
 
 // ═══════════════════════════════════════════════════
@@ -514,15 +534,28 @@ function buildSchedule() {
   list.innerHTML = '';
 
   let lastMonth = '';
+  let monthIdx = 0; // عداد الشهر للتبديل
   SCHEDULE.forEach((ev, idx) => {
     // separator لكل شهر جديد
     const monthKey = ev.month + ev.year;
     if (monthKey !== lastMonth) {
+      // نحدد إذا هذا الشهر "مقلوب" بناءً على نوع أول حدث فيه
+      const isFlipped = ev.type === 'activity';
       const sep = document.createElement('div');
       sep.className = 'month-sep';
+      const flipBadge = isFlipped
+        ? '<span class="flip-badge flipped">🔄 الأدوار مقلوبة</span>'
+        : '<span class="flip-badge normal">⚪ الأدوار العادية</span>';
       sep.innerHTML = `<div class="m-line"></div><div class="m-label">${ev.month} ${ev.year}</div><div class="m-line"></div>`;
+
+      const flipRow = document.createElement('div');
+      flipRow.className = 'flip-row';
+      flipRow.innerHTML = flipBadge;
+
       list.appendChild(sep);
+      list.appendChild(flipRow);
       lastMonth = monthKey;
+      monthIdx++;
     }
 
     const isDone = idx < completedCount;
@@ -553,14 +586,14 @@ function buildSchedule() {
   });
 }
 
-// ── جدول الأدوار المصغر (شهر واحد نموذج) ──
+// ── جدول الأدوار المصغر (يوضح التبديل بين شهر وآخر) ──
 function buildMatrix() {
   const tbl = document.getElementById('roleMatrix');
   tbl.innerHTML = '';
 
   const thead = document.createElement('thead');
   const hr = document.createElement('tr');
-  ['الترتيب', 'الشخص', 'الدور', 'اليوم'].forEach(t => {
+  ['الشخص', 'الشهر العادي', 'الشهر المقلوب'].forEach(t => {
     const th = document.createElement('th');
     th.textContent = t;
     hr.appendChild(th);
@@ -569,32 +602,29 @@ function buildMatrix() {
   tbl.appendChild(thead);
 
   const tbody = document.createElement('tbody');
-  MEMBERS_ORDER.forEach((item, i) => {
+  MEMBERS_ORDER.forEach((item) => {
     const tr = document.createElement('tr');
 
-    const numCell = document.createElement('th');
-    numCell.textContent = toArabicNum(i + 1);
-    numCell.style.minWidth = '40px';
-    tr.appendChild(numCell);
-
-    const nameCell = document.createElement('td');
-    nameCell.style.fontWeight = '900';
-    nameCell.style.color = '#1a1a2e';
+    const nameCell = document.createElement('th');
     nameCell.textContent = item.name;
     tr.appendChild(nameCell);
 
-    const roleCell = document.createElement('td');
-    const pill = document.createElement('span');
-    pill.className = 'role-pill ' + (item.type === 'dinner' ? 'r-dinner' : 'r-activity');
-    pill.textContent = item.type === 'dinner' ? '🍽️ عشاء' : '🏕️ فعالية';
-    roleCell.appendChild(pill);
-    tr.appendChild(roleCell);
+    // العادي
+    const normalCell = document.createElement('td');
+    const pill1 = document.createElement('span');
+    pill1.className = 'role-pill ' + (item.type === 'dinner' ? 'r-dinner' : 'r-activity');
+    pill1.textContent = item.type === 'dinner' ? '🍽️ عشاء' : '🏕️ فعالية';
+    normalCell.appendChild(pill1);
+    tr.appendChild(normalCell);
 
-    const dayCell = document.createElement('td');
-    dayCell.style.color = '#8a8070';
-    dayCell.style.fontSize = '.78rem';
-    dayCell.textContent = item.type === 'dinner' ? 'السبت' : 'الخميس';
-    tr.appendChild(dayCell);
+    // المقلوب
+    const flippedType = item.type === 'dinner' ? 'activity' : 'dinner';
+    const flipCell = document.createElement('td');
+    const pill2 = document.createElement('span');
+    pill2.className = 'role-pill ' + (flippedType === 'dinner' ? 'r-dinner' : 'r-activity');
+    pill2.textContent = flippedType === 'dinner' ? '🍽️ عشاء' : '🏕️ فعالية';
+    flipCell.appendChild(pill2);
+    tr.appendChild(flipCell);
 
     tbody.appendChild(tr);
   });
